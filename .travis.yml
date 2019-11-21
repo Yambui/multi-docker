@@ -1,0 +1,21 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - docker build -t yambui/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true yambui/react-test npm test
+
+after_success:
+  - docker build -t yambui/multi-client ./client
+  - docker build -t yambui/multi-nginx ./nginx
+  - docker build -t yambui/multi-server ./server
+  - docker build -t yambui/multi-worker ./worker
+# Login docker
+  - echo "$DOCKER_PAS" | docker login -u "$DOCKER_ID" --password-stdin
+# Push to docker hub
+  - docker push yambui/multi-client
+  - docker push yambui/multi-nginx
+  - docker push yambui/multi-server
+  - docker push yambui/multi-worker
