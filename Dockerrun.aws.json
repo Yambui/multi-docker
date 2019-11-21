@@ -1,0 +1,36 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "client",
+      "image": "yambui/multi-client",
+      "hostname": "client",
+      "essential": false
+    },
+    {
+      "name": "nginx",
+      "image": "yambui/nginx",
+      "hostname": "nginx",
+      "essential": true,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "links": ["client", "server"]
+    },
+    {
+      "name": "server",
+      "image": "yambui/multi-server",
+      "hostname": "api",
+      "essential": false
+    },
+    {
+      "name": "worker",
+      "image": "yambui/multi-worker",
+      "hostname": "worker",
+      "essential": false
+    }
+  ]
+}
